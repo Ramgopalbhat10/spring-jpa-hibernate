@@ -55,6 +55,10 @@ public class UsersDetailsController {
   // Delete user and get all
   @DeleteMapping("/{emailId}")
   public List<User> deleteUser(@PathVariable("emailId") String emailId) {
+    Optional<User> user = usersRepository.findByEmailId(emailId);
+    if (!user.isPresent()) {
+      throw new UserNotFoundException("User not found");
+    }
     usersRepository.deleteByEmailId(emailId);
     return usersRepository.findAll();
   }
