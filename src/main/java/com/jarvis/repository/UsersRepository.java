@@ -15,9 +15,6 @@ public interface UsersRepository extends JpaRepository<User, Integer> {
   Optional<List<User>> findByName(String name);
 
   @Transactional
-  Optional<List<User>> deleteByName(String name);
-
-  @Transactional
   Optional<User> deleteByEmailId(String emailId);
 
   Optional<User> findByEmailId(String emailId);

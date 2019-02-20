@@ -3,6 +3,7 @@ package com.jarvis.controller;
 import java.util.Date;
 
 import com.jarvis.exceptions.UniqueEmailIdException;
+import com.jarvis.exceptions.UserNotFoundException;
 import com.jarvis.model.ErrorDetails;
 
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,13 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
   public final ResponseEntity<ErrorDetails> handleUniqueEmailIdException(UniqueEmailIdException ex,
       WebRequest request) {
     ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
-    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public final ResponseEntity<ErrorDetails> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+    ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+    return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
   }
 
 }

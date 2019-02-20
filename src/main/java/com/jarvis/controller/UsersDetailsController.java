@@ -1,6 +1,5 @@
 package com.jarvis.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jarvis.exceptions.UniqueEmailIdException;
+import com.jarvis.exceptions.UserNotFoundException;
 import com.jarvis.model.User;
 import com.jarvis.repository.UsersRepository;;
 
@@ -39,7 +39,7 @@ public class UsersDetailsController {
   public List<User> saveUser(@RequestBody User user) {
     Optional<User> userDetails = usersRepository.findByEmailId(user.getEmailId());
     if (userDetails.isPresent()) {
-      throw new UniqueEmailIdException("EmailId aleady exixts");
+      throw new UniqueEmailIdException("EmailId aleady exists");
     }
     usersRepository.save(user);
     return usersRepository.findAll();
@@ -49,7 +49,7 @@ public class UsersDetailsController {
   @GetMapping("/{userName}")
   public List<User> getUserByName(@PathVariable("userName") String userName) {
     Optional<List<User>> users = usersRepository.findByName(userName);
-    return users.orElse(new ArrayList<>());
+    return users.orElseThrow(() -> new UserNotFoundException("User not found"));
   }
 
   // Delete user and get all
@@ -67,11 +67,13 @@ public class UsersDetailsController {
 
     if (userDetails.isPresent()) {
       userDetailsToUpdate = userDetails.get();
+    } else {
+      throw new UserNotFoundException("User not found");
     }
     userDetailsToUpdate.setSalary(user.getSalary());
     userDetailsToUpdate.setTeam(user.getTeam());
     usersRepository.save(userDetailsToUpdate);
 
-    return usersRepository.findByEmailId(emailId).orElse(new User());
+    return usersRepository.findByEmailId(emailId).get();
   }
 }
