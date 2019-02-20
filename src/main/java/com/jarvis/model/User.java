@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
@@ -13,7 +14,7 @@ import lombok.Data;
  */
 @Data
 @Entity
-@Table(name = "users", catalog = "test")
+@Table(name = "users", catalog = "test", uniqueConstraints = @UniqueConstraint(columnNames = { "emailId" }))
 public class User {
 
   @Id
@@ -29,6 +30,9 @@ public class User {
 
   @Column(name = "salary")
   private Integer salary;
+
+  @Column(name = "emailId")
+  private String emailId;
 
   public User() {
   }

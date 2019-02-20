@@ -1,6 +1,7 @@
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 example.http
+query.sql
 mvnw
 mvnw.cmd
 .mvn
